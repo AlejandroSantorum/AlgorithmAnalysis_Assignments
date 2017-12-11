@@ -59,6 +59,10 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
     printf("Error. Tamaño de las permutaciones negativo o nulo.\n");
     return ERR;
   }
+  if(orden != ORDENADO && orden != NO_ORDENADO){
+    printf("Error. Orden no especificado.\n");
+    return ERR;
+  }
   
   /*El grueso del programa------------------------------------------------------*/
   n_claves = N*n_veces;
@@ -98,6 +102,12 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
   }
   
   generador(tabla_claves, n_claves, N);
+  if(tabla_claves == NULL){
+    printf("Error al generar claves\n");
+    free(perm);
+    libera_diccionario(dicc);
+    return ERR;
+  }
   
   for(i=0; i<n_claves; i++){
     clave = tabla_claves[i];
@@ -174,6 +184,10 @@ short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves gene
   }
   if(n_veces<=0){
     printf("Error. Número de permutaciones nulo o negativo.\n");
+    return ERR;
+  }
+  if(orden != ORDENADO && orden != NO_ORDENADO){
+    printf("Error. Orden no especificado.\n");
     return ERR;
   }
   if(fichero == NULL){
@@ -265,7 +279,7 @@ short guarda_tabla_tiempos(char *fichero, TIEMPO *ptiempo, int n_tiempos){
     return ERR;
   }
   
-  fprintf(f, "size  time(ms)  avg_ob  max_ob  min_ob.\n");
+  fprintf(f, "size     time(ms)     avg_ob     max_ob     min_ob.\n");
   
   for(i=0; i<n_tiempos; i++){
     fprintf(f, "%d   %f   %.2f   %d   %d\n", ptiempo[i].N, ptiempo[i].tiempo, ptiempo[i].medio_ob, ptiempo[i].max_ob, ptiempo[i].min_ob);

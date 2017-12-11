@@ -74,6 +74,10 @@ PDICC ini_diccionario (int tamanio, char orden){
 	    return NULL;
 	}
 	
+	if(orden != ORDENADO && orden != NO_ORDENADO){
+	    fprintf(stdout, "Error. Argumento orden incorrecto\n");
+	    return NULL;
+	}
 	/*-------------------------------------------------------*/
 	dic = (DICC *) malloc(sizeof(DICC));
 	if(dic == NULL){
@@ -98,12 +102,14 @@ PDICC ini_diccionario (int tamanio, char orden){
 
 void libera_diccionario(PDICC pdicc){
 	if(pdicc == NULL){
-	    fprintf(stdout, "Aviso. Se está intentando liberar un diccionario a NULL.\n");
+	    fprintf(stdout, "Error. Se está intentando liberar un diccionario a NULL.\n");
 	    return;
 	}
 	
-	free(pdicc->tabla);
-	
+	if(pdicc->tabla != NULL){
+		free(pdicc->tabla);
+	}
+
 	free(pdicc);
 }
 
@@ -116,6 +122,10 @@ int inserta_diccionario(PDICC pdicc, int clave){
 	/* Suponemos que la clave que se aporta cabe en el tamaño de una variable de tipo int*/
 	if(pdicc == NULL){
 	    fprintf(stdout,"Error. pdicc en inserta_diccionario recibido como NULL.\n");
+	    return ERR;
+	}
+	if(pdicc->tamanio == pdicc->n_datos){
+		fprintf(stdout,"Error. pdicc en inserta_diccionario está lleno.\n");
 	    return ERR;
 	}
 	/*---------------------------------------------*/
@@ -148,7 +158,7 @@ int inserta_diccionario(PDICC pdicc, int clave){
 
 
 int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
-	int i, ncdc=0;
+	int i, ncdc=0, aux=0;
 	
 	/* Comprobaciones */
 	if(pdicc == NULL){
@@ -165,10 +175,19 @@ int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
 	    fprintf(stdout,"Error. n_claves en insercion_masiva_diccionario negativo o nulo.\n");
 	    return ERR;
 	}
+	
+	if(n_claves == 0){
+	    return 0;
+	}
 	/*-----------------------------------------------------------------------*/
 	
 	for(i=0;i<n_claves;i++){
-	    ncdc += inserta_diccionario(pdicc, claves[i]);
+		aux = inserta_diccionario(pdicc, claves[i]);
+		if(aux == ERR){
+			fprintf(stdout,"Error. retorno de inserta_diccionario en insercion_masiva erróneo.\n");
+	    	return ERR;
+		}
+	    ncdc += aux;
 	}
 	
 	return ncdc;
@@ -190,7 +209,7 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
 	/* ---------------------------------------------------------- */
     
 	ncdc = metodo(pdicc->tabla, 0, pdicc->n_datos, clave, ppos);
-	if(ncdc == ERR){ /* ERROR 1 */
+	if(ncdc == ERR || ncdc < 0){ /* ERROR */
 		fprintf(stdout, "Error en la función de búsqueda en busca_diccionario.\n");
 		return ERR;
 	}
@@ -208,7 +227,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
     int m, ncdc=0;
 	
 	/* Comprobaciones de error*/
-	if(tabla == NULL || ppos==NULL){
+	if(tabla == NULL){
 	    fprintf(stdout,"Error. tabla en bbin recibida como NULL.\n");
 	    return ERR;
 	}

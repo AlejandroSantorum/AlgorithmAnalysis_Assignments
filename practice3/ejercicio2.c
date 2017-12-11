@@ -36,8 +36,7 @@ int main(int argc, char** argv)
 
   if (argc != 11) {
     fprintf(stderr, "Error en los parametros de entrada:\n\n");
-    fprintf(stderr, "%s -num_min <int> -num_max <int> -incr <int>\n", argv[0]);
-    fprintf(stderr, "\t\t -n_claves <int> -n_veces <int> -fichSalida <string> \n");
+    fprintf(stderr, "%s -num_min <int> -num_max <int> -incr <int> -n_veces <int> -fichSalida <string>\n", argv[0]);
     fprintf(stderr, "Donde:\n");
     fprintf(stderr, "-num_min: numero minimo de elementos de la tabla\n");
     fprintf(stderr, "-num_max: numero minimo de elementos de la tabla\n");
@@ -48,8 +47,9 @@ int main(int argc, char** argv)
   }
 
   printf("Practica numero 3, apartado 2\n");
-  printf("Realizada por: Vuestros nombres\n");
-  printf("Grupo: Vuestro grupo\n");
+  printf("Realizada por: Alejandro Santorum y David Cabornero.\n");
+  printf("Grupo: 1201.\n");
+  printf("pareja 10.\n");
 
   /* comprueba la linea de comandos */
   for(i = 1; i < argc ; i++) {
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
   }
 
   /* calculamos los tiempos */
-  ret = genera_tiempos_busqueda(blin, generador_claves_uniforme, NO_ORDENADO, nombre, num_min, num_max, incr, n_veces);
+  ret = genera_tiempos_busqueda(blin_auto, generador_claves_potencial, NO_ORDENADO, nombre, num_min, num_max, incr, n_veces);
   if (ret == ERR) { 
     printf("Error en la funcion genera_tiempos_busqueda\n");
     exit(-1);
