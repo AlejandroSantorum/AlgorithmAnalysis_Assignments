@@ -50,9 +50,21 @@ int mergesort(int* tabla, int ip, int iu){
     M = floor(aux);
 
     a = mergesort(tabla, ip, M);
+    if(a==ERR){
+        printf("Error en mergesort recursivo(a).\n");
+        return ERR;
+    }
     b = mergesort(tabla, M+1, iu);
+    if(b==ERR){
+        printf("Error en mergesort recursivo(b).\n");
+        return ERR;
+    }
 
     c = merge(tabla, ip, iu, M);
+    if(c==ERR){
+        printf("Error en merge.\n");
+        return ERR;
+    }
 
     return (a+b+c);
 }
@@ -163,6 +175,10 @@ int quicksort(int *tabla, int ip, int iu){
     }
 
     c = partir(tabla, ip, iu, &pos);
+    if(c==ERR){
+        printf("Error en partir.\n");
+        return ERR;
+    }
 
     if(ip < pos-1){
         a = quicksort(tabla, ip, pos-1);

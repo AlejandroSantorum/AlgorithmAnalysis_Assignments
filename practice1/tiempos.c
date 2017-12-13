@@ -167,6 +167,7 @@ short genera_tiempos_ordenacion(pfunc_ordena metodo, char *fichero, int num_min,
   
   
   if(guarda_tabla_tiempos(fichero, ptiempo, array_size) == ERR){
+    free(ptiempo);
     return ERR;
   }    
   

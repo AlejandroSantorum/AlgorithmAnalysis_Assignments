@@ -226,11 +226,10 @@ short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves gene
     }
   }
   
-  
   if(guarda_tabla_tiempos(fichero, ptiempo, array_size) == ERR){
+    free(ptiempo);
     return ERR;
   }    
-  
   
   free(ptiempo);
   
