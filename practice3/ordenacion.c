@@ -12,7 +12,7 @@ Creadores: Alejandro Santorum y David Cabornero
 Fecha: 25/09/2017
 Pareja. 10
 Función: mergesort
-    Recive:
+    Recibe:
         -tabla: array de enteros
         -ip: índice del primer elemento de la tabla
         -iu: índice del último elemento de la tabla
