@@ -1,6 +1,6 @@
 /**
  *
- * Descripcion: Funciones de cabecera para ordenacion 
+ * Descripcion: Funciones de cabecera para ordenacion
  *
  * Fichero: tiempos.h
  * Autor: Carlos Aguirre.
@@ -24,7 +24,7 @@
 /* definiciones de tipos */
 typedef struct tiempo {
   int N;           /* tamanio los elementos */
-  int n_elems;     /* numero de elementos a promediar */
+  long n_elems;     /* numero de elementos a promediar */
   double tiempo;   /* tiempo promedio */
   double medio_ob; /* numero premedio de veces que se ejecuta la OB */
   int min_ob;      /* minimo de ejecuciones de la OB */
@@ -33,8 +33,8 @@ typedef struct tiempo {
 
 
 /* Funciones */
-short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador, char orden, int N, int n_veces, PTIEMPO ptiempo);
-short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador, int orden, char* fichero, int num_min, int num_max, 
+short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador, int orden, int N, int n_veces, PTIEMPO ptiempo);
+short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador, int orden, char* fichero, int num_min, int num_max,
 int incr, int n_veces);
 short guarda_tabla_tiempos(char* fichero, PTIEMPO tiempo, int n_tiempos);
 

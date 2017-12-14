@@ -1,6 +1,7 @@
 /***********************************************/
-/* Programa: ejercicio1     Fecha:             */
-/* Autores:                                    */
+/* Programa: ejercicio1     Fecha: 13/12/2017  */
+/* Autores: Alejandro Santorum                 */
+/*          David Cabornero                    */
 /*                                             */
 /* Programa que comprueba el funcionamiento de */
 /* la busqueda lineal                          */

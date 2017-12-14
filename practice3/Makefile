@@ -3,7 +3,7 @@
 # Se asume que los ficheros fuente se llaman ejercicio1.c, ejercicio2.c,...,ordenar.h
 #-----------------------
 
-CC = gcc -ansi -pedantic
+CC = gcc -ansi -pedantic -std=gnu99
 CFLAGS = -Wall
 EXE = ejercicio1 ejercicio2
 
@@ -13,12 +13,12 @@ all : $(EXE)
 clean :
 	rm -f *.o core $(EXE)
 
-$(EXE) : % : %.o busqueda.o permutaciones.o tiempos.o ordenacion.o
+$(EXE) : % : %.o busqueda.o permutaciones.o tiempos.o
 	@echo "#---------------------------"
 	@echo "# Generando $@ "
 	@echo "# Depende de $^"
 	@echo "# Ha cambiado $<"
-	$(CC) $(CFLAGS) -o $@ $@.o busqueda.o permutaciones.o tiempos.o ordenacion.o -lm
+	$(CC) $(CFLAGS) -o $@ $@.o busqueda.o permutaciones.o tiempos.o -lm
 
 busqueda.o : busqueda.c busqueda.h
 	@echo "#---------------------------"
@@ -28,13 +28,6 @@ busqueda.o : busqueda.c busqueda.h
 	$(CC) $(CFLAGS) -c $<
 
 permutaciones.o : permutaciones.c permutaciones.h
-	@echo "#---------------------------"
-	@echo "# Generando $@"
-	@echo "# Depende de $^"
-	@echo "# Ha cambiado $<"
-	$(CC) $(CFLAGS) -c $<
-	
-ordenacion.o : ordenacion.c ordenacion.h
 	@echo "#---------------------------"
 	@echo "# Generando $@"
 	@echo "# Depende de $^"

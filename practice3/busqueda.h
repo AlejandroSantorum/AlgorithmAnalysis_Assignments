@@ -29,7 +29,7 @@
 typedef struct diccionario {
   int tamanio; /* tamano de la tabla */
   int n_datos; /* numero de datos en la tabla */
-  char orden;  /* tabla ordenada o desordenada */
+  int orden;  /* tabla ordenada o desordenada */
   int *tabla;  /* tabla de datos */
 } DICC, *PDICC;
 
@@ -37,7 +37,7 @@ typedef int (* pfunc_busqueda)(int*, int, int, int, int*);
 typedef void (* pfunc_generador_claves)(int*, int, int);
 
 /* TAD Diccionario */
-PDICC ini_diccionario (int tamanio, char orden);
+PDICC ini_diccionario (int tamanio, int orden);
 void libera_diccionario(PDICC pdicc);
 int inserta_diccionario(PDICC pdicc, int clave);
 int insercion_masiva_diccionario (PDICC pdicc,int *claves, int n_claves);

@@ -1,6 +1,6 @@
 /***********************************************************/
-/* Programa: ejercicio2 Fecha:                             */
-/* Autores:                                                */
+/* Programa: ejercicio2 Fecha: 13/12/2017                  */
+/* Autores:  Alejandro Santorum & David Cabornero          */
 /*                                                         */
 /* Programa que escribe en un fichero                      */
 /* los tiempos medios del algoritmo de                     */

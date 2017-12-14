@@ -1,6 +1,6 @@
 /**
  *
- * Descripcion: Implementacion funciones para busqueda 
+ * Descripcion: Implementacion funciones para busqueda
  *
  * Fichero: busqueda.c
  * Autor: Carlos Aguirre
@@ -21,14 +21,14 @@
  *
  *  Descripcion: Recibe el numero de claves que hay que generar
  *               en el parametro n_claves. Las claves generadas
- *               iran de 1 a max. Las claves se devuelven en 
+ *               iran de 1 a max. Las claves se devuelven en
  *               el parametro claves que se debe reservar externamente
  *               a la funcion.
  */
-  
+
 /**
  *  Funcion: generador_claves_uniforme
- *               Esta fucnion genera todas las claves de 1 a max de forma 
+ *               Esta fucnion genera todas las claves de 1 a max de forma
  *               secuencial. Si n_claves==max entonces se generan cada clave
  *               una unica vez.
  */
@@ -51,7 +51,11 @@ void generador_claves_potencial(int *claves, int n_claves, int max){
   int i;
 
   for(i = 0; i < n_claves; i++) {
-    claves[i] = (1+max) / (1 + max*((double)rand()/RAND_MAX));
+    do{
+      claves[i] = (1+max) / (1 + max*((double)rand()/RAND_MAX));
+    }while(claves[i]==(1+max)); /*Se hace este cambio porque hay una posibilidad
+                                entre RAND_MAX que rand()=0 y por lo tanto
+                                claves[i] = max+1 lo cual no es lo que se quiere*/
   }
 
   return;
@@ -60,20 +64,20 @@ void generador_claves_potencial(int *claves, int n_claves, int max){
 /*-------------------NUESTRAS FUNCIONES----------------------*/
 
 
-PDICC ini_diccionario (int tamanio, char orden){
+PDICC ini_diccionario (int tamanio, int orden){
 	DICC *dic = NULL;
-	
+
 	/* Comprobaciones de error */
 	if(tamanio < 0){
 	    fprintf(stdout, "Error. Tamaño del diccionario menor que cero.\n");
 	    return NULL;
 	}
-	
+
 	if(tamanio == 0){
 	    fprintf(stdout, "Aviso. Tamaño del diccionario igual a cero.\n");
 	    return NULL;
 	}
-	
+
 	if(orden != ORDENADO && orden != NO_ORDENADO){
 	    fprintf(stdout, "Error. Argumento orden incorrecto\n");
 	    return NULL;
@@ -84,17 +88,17 @@ PDICC ini_diccionario (int tamanio, char orden){
 	    fprintf(stdout, "Error en la reserva de memoria de ini_diccionario.\n");
 	    return NULL;
 	}
-	
+
 	dic->tabla = (int*) malloc (tamanio*sizeof(int));
 	if(dic->tabla == NULL){
 	    fprintf(stdout, "Error en la reserva de memoria de la tabla de ini_diccionario.\n");
 	    return NULL;
 	}
-	
+
 	dic->tamanio = tamanio;
 	dic->orden = orden;
 	dic->n_datos = 0;
-	
+
 	return dic;
 }
 
@@ -105,7 +109,7 @@ void libera_diccionario(PDICC pdicc){
 	    fprintf(stdout, "Error. Se está intentando liberar un diccionario a NULL.\n");
 	    return;
 	}
-	
+
 	if(pdicc->tabla != NULL){
 		free(pdicc->tabla);
 	}
@@ -117,7 +121,7 @@ void libera_diccionario(PDICC pdicc){
 
 int inserta_diccionario(PDICC pdicc, int clave){
     int aux, j, ncdc=0;
-    
+
 	/* Comprobaciones de error */
 	/* Suponemos que la clave que se aporta cabe en el tamaño de una variable de tipo int*/
 	if(pdicc == NULL){
@@ -129,17 +133,15 @@ int inserta_diccionario(PDICC pdicc, int clave){
 	    return ERR;
 	}
 	/*---------------------------------------------*/
-	
 	if(pdicc->orden == NO_ORDENADO){
 	    pdicc->tabla[pdicc->n_datos] = clave;
 	    pdicc->n_datos++;
 	    return 0;
 	}
-	
+
 	else if(pdicc->orden == ORDENADO){
 	    pdicc->tabla[pdicc->n_datos] = clave;
-	    
-	    
+
 	    aux = pdicc->tabla[pdicc->n_datos];
 	    j = pdicc->n_datos - 1;
 	    while(j >= 0 && pdicc->tabla[j] > aux){
@@ -151,7 +153,6 @@ int inserta_diccionario(PDICC pdicc, int clave){
 	    ncdc++;
 	    pdicc->n_datos++;
 	}
-	
 	return ncdc;
 }
 
@@ -159,28 +160,28 @@ int inserta_diccionario(PDICC pdicc, int clave){
 
 int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
 	int i, ncdc=0, aux=0;
-	
+
 	/* Comprobaciones */
 	if(pdicc == NULL){
 	    fprintf(stdout,"Error. pdicc en inserta_masiva_diccionario recibido como NULL.\n");
 	    return ERR;
 	}
-	
+
 	if(claves == NULL){
 	    fprintf(stdout,"Error. claves en insercion_masiva_diccionario recibido como NULL.\n");
 	    return ERR;
 	}
-	
+
 	if(n_claves <= 0){
 	    fprintf(stdout,"Error. n_claves en insercion_masiva_diccionario negativo o nulo.\n");
 	    return ERR;
 	}
-	
+
 	if(n_claves == 0){
 	    return 0;
 	}
 	/*-----------------------------------------------------------------------*/
-	
+
 	for(i=0;i<n_claves;i++){
 		aux = inserta_diccionario(pdicc, claves[i]);
 		if(aux == ERR){
@@ -189,7 +190,7 @@ int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
 		}
 	    ncdc += aux;
 	}
-	
+
 	return ncdc;
 }
 
@@ -200,15 +201,15 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
 	    fprintf(stdout,"Error. pdicc en busca_diccionario recibido como NULL.\n");
 	    return ERR;
 	}
-	/* OBSERVACIÓN: No se necesita una comprobación para ppos ya que este 
+	/* OBSERVACIÓN: No se necesita una comprobación para ppos ya que este
 	   puede que sea igual a NULL, dependiendo de como se pase en el programa principal.*/
 	if(metodo == NULL){
 	    fprintf(stdout,"Error. metodo en busca_diccionario recibido como NULL.\n");
 	    return ERR;
 	}
 	/* ---------------------------------------------------------- */
-    
-	ncdc = metodo(pdicc->tabla, 0, pdicc->n_datos, clave, ppos);
+
+	ncdc = metodo(pdicc->tabla, 0, pdicc->n_datos-1, clave, ppos);
 	if(ncdc == ERR || ncdc < 0){ /* ERROR */
 		fprintf(stdout, "Error en la función de búsqueda en busca_diccionario.\n");
 		return ERR;
@@ -217,7 +218,7 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
 	    fprintf(stdout, "ppos es igual a NULL despues de una función de búsqueda, lo cual es imposible.\n");
 	    return ERR;
 	}
-	
+
 	return ncdc;
 }
 
@@ -225,7 +226,7 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
 /* Funciones de busqueda del TAD Diccionario */
 int bbin(int *tabla,int P,int U,int clave,int *ppos){
     int m, ncdc=0;
-	
+
 	/* Comprobaciones de error*/
 	if(tabla == NULL){
 	    fprintf(stdout,"Error. tabla en bbin recibida como NULL.\n");
@@ -238,7 +239,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
 	/*--------------------------------------------------*/
 	while(P <= U){
 	    m = (P+U)/2;
-	    
+
 	    ncdc++;
 	    if(tabla[m] == clave){
 	        *ppos = m;
@@ -247,14 +248,14 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
 	    else if(clave < tabla[m]){
 	        U = m-1;
 	    }
-	    
+
 	    else{
 	        P = m+1;
 	    }
 	}
-	
+
 	*ppos = NO_ENCONTRADO;
-	
+
 	return ncdc;
 }
 
@@ -262,7 +263,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
 
 int blin(int *tabla,int P,int U,int clave,int *ppos){
 	int ncdc=0, i;
-	
+
 	/* Comprobaciones de error*/
 	if(tabla == NULL){
 	    fprintf(stdout,"Error. tabla en bbin recibida como NULL.\n");
@@ -273,7 +274,7 @@ int blin(int *tabla,int P,int U,int clave,int *ppos){
 	    return ERR;
 	}
     /*--------------------------------------------------*/
-	for(i=P; i<U; i++){
+	for(i=P; i<=U; i++){
 	    ncdc++;
 	    if(tabla[i] == clave){
 	        *ppos = i;
@@ -281,7 +282,7 @@ int blin(int *tabla,int P,int U,int clave,int *ppos){
 	    }
 	}
 	*ppos = NO_ENCONTRADO;
-	
+
 	return ncdc;
 }
 
@@ -289,7 +290,7 @@ int blin(int *tabla,int P,int U,int clave,int *ppos){
 
 int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
     int ncdc=0, i, aux;
-	/*Podríamos haber utilizado el algoritmo anterior blin en este código, pero nos parece 
+	/*Podríamos haber utilizado el algoritmo anterior blin en este código, pero nos parece
 	más claro en lo que respecta a comprobaciones volver a representar todo el algoritmo aquí*/
 
     /* Comprobaciones de error*/
@@ -302,20 +303,20 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
 	    return ERR;
 	}
     /*--------------------------------------------------*/
-    
-    for(i=P; i<U; i++){
+
+    for(i=P; i<=U; i++){
 	    ncdc++;
 	    if(tabla[i] == clave){
 	    	*ppos = i;
 	        if(i != P){
 	        	aux = tabla[i]; /*Swap*/
 	        	tabla[i] = tabla[i-1];
-	        	tabla[i-1] = aux;	
+	        	tabla[i-1] = aux;
 	        }
 	        return ncdc;
 	    }
 	}
     *ppos = NO_ENCONTRADO;
-	
+
 	return ncdc;
 }
